@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Session;
 
 use Npds\Config\Config;
+use Npds\Support\Facades\Request;
 
 
 /**
- * Undocumented class
+ * Class Session
  */
 class Session 
 {
@@ -17,6 +20,7 @@ class Session
      * @var \Npds\Session $instance
      */
     protected static Session $instance;
+
 
     /**
      * Constructeur.
@@ -43,14 +47,14 @@ class Session
     /**
      * Mise à jour la table session
      *
-     * @return  [type]  [return description]
+     * @return  void
      */
     public function session_manage()
     {
         global $cookie, $REQUEST_URI;
 
         $guest = 0;
-        $ip = getip();
+        $ip = Request::getip();
 
         $username = isset($cookie[1]) ? $cookie[1] : $ip;
 
@@ -59,12 +63,11 @@ class Session
         }
 
         // geoloc
-        include("Modules/geoloc/geoloc.conf");
+        include(module_path('geoloc/geoloc.conf'));
 
         if ($geo_ip == 1) {
-            include "Modules/geoloc/geoloc_refip.php";
+            include module_path('geoloc/geoloc_refip.php');
         }
-        // geoloc
 
         $past = time() - 300;
 
