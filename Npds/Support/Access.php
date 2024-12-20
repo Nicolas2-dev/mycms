@@ -17,7 +17,7 @@ class Access
      *
      * @return  void
      */
-    public static function Admin_alert(string $motif)
+    public static function adminAlert(string $motif)
     {
         global $admin;
     
