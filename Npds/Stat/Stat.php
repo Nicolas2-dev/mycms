@@ -9,7 +9,7 @@ use Npds\Support\Sanitize;
 
 
 /**
- * Undocumented class
+ * Class Stat
  */
 class Stat 
 {
@@ -17,7 +17,7 @@ class Stat
     /**
      * Instance Stat.
      *
-     * @var \Npds\Stat $instance
+     * @var \Npds\Stat\Stat $instance
      */
     protected static Stat $instance;
 
@@ -40,7 +40,7 @@ class Stat
     /**
      * Get instance class Stat.
      *
-     * @return \Npds\Stat $instance
+     * @return \Npds\Stat\Stat $instance
      */
     public static function getInstance()
     {
@@ -50,9 +50,13 @@ class Stat
 
         return static::$instance = new static();
     }
-
-    #autodoc req_stat() : Retourne un tableau contenant les nombres pour les statistiques du site (stats.php)
-    function req_stat()
+ 
+    /**
+     * Retourne un tableau contenant les nombres pour les statistiques du site (stats.php)
+     *
+     * @return  array
+     */
+    public function req_stat()
     {
         // Les membres
         $result = sql_query("SELECT uid FROM " . sql_prefix('users'));
@@ -110,12 +114,12 @@ class Stat
     /**
      * [generatePourcentageAndTotal description]
      *
-     * @param   [type]  $count  [$count description]
-     * @param   [type]  $total  [$total description]
+     * @param   int  $count  [$count description]
+     * @param   int  $total  [$total description]
      *
-     * @return  [type]          [return description]
+     * @return  array
      */
-    function generatePourcentageAndTotal($count, $total)
+    public function generatePourcentageAndTotal(int $count, int $total)
     {
         $tab[] = Sanitize::wrh((int) $count);
         $tab[] = substr(sprintf('%f', 100 * $count / $total), 0, 5);
@@ -126,7 +130,7 @@ class Stat
     /**
      * [themeDistinct description]
      *
-     * @return  [type]  [return description]
+     * @return  void
      */
     public function themeDistinct()
     {
