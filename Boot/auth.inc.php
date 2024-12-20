@@ -1,30 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
-function Admin_alert($motif)
-{
-    global $admin;
+use Npds\Support\Access;
+use Npds\Support\Facades\Password;
 
-    setcookie('admin', '', 0);
-    unset($admin);
-
-    Ecr_Log('security', 'auth.inc.php/Admin_alert : ' . $motif, '');
-
-    $Titlesitename = 'NPDS';
-    if (file_exists("storage/meta/meta.php")) {
-        include("storage/meta/meta.php");
-    }
-
-    echo '
-      </head>
-      <body>
-         <br /><br /><br />
-         <p style="font-size: 24px; font-family: Tahoma, Arial; color: red; text-align:center;"><strong>.: ' . translate("Votre adresse Ip est enregistrée") . ' :.</strong></p>
-      </body>
-   </html>';
-
-    die();
-}
 
 if ((isset($aid)) and (isset($pwd)) and ($op == 'login')) {
     if ($aid != '' and $pwd != '') {
@@ -45,7 +25,7 @@ if ((isset($aid)) and (isset($pwd)) and ($op == 'login')) {
 
                     $AlgoCrypt = PASSWORD_BCRYPT;
                     $min_ms = 100;
-                    $options = ['cost' => getOptimalBcryptCostParameter($pwd, $AlgoCrypt, $min_ms)];
+                    $options = ['cost' => Password::getOptimalBcryptCostParameter($pwd, $AlgoCrypt, $min_ms)];
                     $hashpass = password_hash($pwd, $AlgoCrypt, $options);
                     $pwd = crypt($pwd, $hashpass);
 
@@ -71,7 +51,7 @@ if ((isset($aid)) and (isset($pwd)) and ($op == 'login')) {
             } elseif (password_verify($dbpass, $scryptPass) or strcmp($dbpass, $pwd) == 0) {
                 $CryptpPWD = $pwd;
             } else {
-                Admin_Alert("Passwd not in DB#1 : $aid");
+                Access::adminAlert("Passwd not in DB#1 : $aid");
             }
 
             $admin = base64_encode("$aid:" . md5($CryptpPWD));
@@ -98,7 +78,7 @@ if (isset($admin) and ($admin != '')) {
 
     $AIpwd = $Xadmin[1];
     if ($aid == '' or $AIpwd == '') {
-        Admin_Alert('Null Aid or Passwd');
+        Access::adminAlert('Null Aid or Passwd');
     }
 
     $result = sql_query("SELECT pwd, radminsuper 
@@ -106,7 +86,7 @@ if (isset($admin) and ($admin != '')) {
                          WHERE aid = '$aid'");
 
     if (!$result) {
-        Admin_Alert("DB not ready #2 : $aid / $AIpwd");
+        Access::adminAlert("DB not ready #2 : $aid / $AIpwd");
     } else {
         list($AIpass, $Xsuper_admintest) = sql_fetch_row($result);
 
@@ -114,7 +94,7 @@ if (isset($admin) and ($admin != '')) {
             $admintest = true;
             $super_admintest = $Xsuper_admintest;
         } else {
-            Admin_Alert("Password in Cookies not Good #1 : $aid / $AIpwd");
+            Access::adminAlert("Password in Cookies not Good #1 : $aid / $AIpwd");
         }
     }
 
