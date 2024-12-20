@@ -152,7 +152,7 @@ class Sanitize
      */
     public static function wrh(int $ibid)
     {
-        $tmp = number_format( (int) $ibid, 0, ',', ' ');
+        $tmp = number_format($ibid, 0, ',', ' ');
         $tmp = str_replace(' ', '&nbsp;', $tmp);
 
         return $tmp;
