@@ -7,11 +7,16 @@ namespace Npds\Support;
 use Npds\Config\Config;
 
 
+/**
+ * Class Counter
+ */
 class Counter
 {
 
     /**
-     * 
+     * [Update description]
+     *
+     * @return  void
      */
     public static function Update()
     {

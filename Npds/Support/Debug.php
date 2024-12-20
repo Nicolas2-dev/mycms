@@ -7,6 +7,9 @@ namespace Npds\Support;
 use Npds\Config\Config;
 
 
+/**
+ * Class Debug
+ */
 class Debug
 {
 

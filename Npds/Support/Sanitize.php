@@ -8,7 +8,7 @@ use Npds\Support\Facades\Mailer;
 
 
 /**
- * [Sanitize description]
+ * Class Sanitize
  */
 class Sanitize
 {

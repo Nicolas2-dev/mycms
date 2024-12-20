@@ -22,136 +22,136 @@ use Npds\Support\Facades\Download;
 use Npds\Support\Facades\Language;
 
 
-    #autodoc makeChatBox($pour) :  <br />=> syntaxe : function#makeChatBox <br />params#chat_membres <br /> le parametre doit être en accord avec l'autorisation donc (chat_membres, chat_tous, chat_admin, chat_anonyme)
-    /**
-     * Bloc ChatBox
-     *
-     * @param   string  $pour  [$pour description]
-     *
-     * @return  [type]         [return description]
-     */
-    function makeChatBox(string $pour = '')
-    {
-        global $user, $admin, $long_chain;
+#autodoc makeChatBox($pour) :  <br />=> syntaxe : function#makeChatBox <br />params#chat_membres <br /> le parametre doit être en accord avec l'autorisation donc (chat_membres, chat_tous, chat_admin, chat_anonyme)
+/**
+ * Bloc ChatBox
+ *
+ * @param   string  $pour  [$pour description]
+ *
+ * @return  [type]         [return description]
+ */
+function makeChatBox(string $pour = '')
+{
+    global $user, $admin, $long_chain;
 
-        $auto = Block::autorisation_block('params#' . $pour);
-        $dimauto = count($auto);
+    $auto = Block::autorisation_block('params#' . $pour);
+    $dimauto = count($auto);
 
-        if (!$long_chain) {
-            $long_chain = 12;
-        }
+    if (!$long_chain) {
+        $long_chain = 12;
+    }
 
-        $thing = '';
-        $une_ligne = false;
+    $thing = '';
+    $une_ligne = false;
 
-        if ($dimauto <= 1) {
-            $counter = sql_num_rows(sql_query("SELECT message 
+    if ($dimauto <= 1) {
+        $counter = sql_num_rows(sql_query("SELECT message 
                                             FROM " . sql_prefix('chatbox') . " 
                                             WHERE id='" . $auto[0] . "'")) - 6;
-            
-            if ($counter < 0) {
-                $counter = 0;
-            }
-            
-            $result = sql_query("SELECT username, message, dbname 
+
+        if ($counter < 0) {
+            $counter = 0;
+        }
+
+        $result = sql_query("SELECT username, message, dbname 
                                 FROM " . sql_prefix('chatbox') . " 
                                 WHERE id='" . $auto[0] . "' 
                                 ORDER BY date 
                                 ASC LIMIT $counter,6");
-            
-            if ($result) {
-                while (list($username, $message, $dbname) = sql_fetch_row($result)) {
-                    if (isset($username)) {
-                        if ($dbname == 1) {
 
-                            $thing .= ((!$user) and (Config::get('npds.member_list') == 1) and (!$admin)) ?
-                                '<span class="">' . substr($username, 0, 8) . '.</span>' :
-                                "<a href=\"" . site_url('user.php?op=userinfo&amp;uname=' . $username) . "\">" . substr($username, 0, 8) . ".</a>";
-                        } else {
-                            $thing .= '<span class="">' . substr($username, 0, 8) . '.</span>';
-                        }
+        if ($result) {
+            while (list($username, $message, $dbname) = sql_fetch_row($result)) {
+                if (isset($username)) {
+                    if ($dbname == 1) {
+
+                        $thing .= ((!$user) and (Config::get('npds.member_list') == 1) and (!$admin)) ?
+                            '<span class="">' . substr($username, 0, 8) . '.</span>' :
+                            "<a href=\"" . site_url('user.php?op=userinfo&amp;uname=' . $username) . "\">" . substr($username, 0, 8) . ".</a>";
+                    } else {
+                        $thing .= '<span class="">' . substr($username, 0, 8) . '.</span>';
                     }
-
-                    $une_ligne = true;
-
-                    $thing .= (strlen($message) > $long_chain)  
-                        ? "&gt;&nbsp;<span>" . Smilies::smilie(stripslashes(substr($message, 0, $long_chain))) . " </span><br />\n" 
-                        : "&gt;&nbsp;<span>" . Smilies::smilie(stripslashes($message)) . " </span><br />\n";
                 }
-            }
 
-            $PopUp = JavaPopUp(site_url('chat.php?id=' . $auto[0] . '&amp;auto=' . Crypt::encrypt(serialize($auto[0]))), 'chat' . $auto[0], 380, 480);
-            
-            if ($une_ligne) {
-                $thing .= '<hr />';
-            }
+                $une_ligne = true;
 
-            $result = sql_query("SELECT DISTINCT ip 
+                $thing .= (strlen($message) > $long_chain)
+                    ? "&gt;&nbsp;<span>" . Smilies::smilie(stripslashes(substr($message, 0, $long_chain))) . " </span><br />\n"
+                    : "&gt;&nbsp;<span>" . Smilies::smilie(stripslashes($message)) . " </span><br />\n";
+            }
+        }
+
+        $PopUp = JavaPopUp(site_url('chat.php?id=' . $auto[0] . '&amp;auto=' . Crypt::encrypt(serialize($auto[0]))), 'chat' . $auto[0], 380, 480);
+
+        if ($une_ligne) {
+            $thing .= '<hr />';
+        }
+
+        $result = sql_query("SELECT DISTINCT ip 
                                 FROM " . sql_prefix('chatbox') . " 
                                 WHERE id='" . $auto[0] . "' 
                                 AND date >= " . (time() - (60 * 2)) . "");
-            
-            $numofchatters = sql_num_rows($result);
-            
-            $thing .= $numofchatters > 0 
-                ? '<div class="d-flex">
+
+        $numofchatters = sql_num_rows($result);
+
+        $thing .= $numofchatters > 0
+            ? '<div class="d-flex">
                         <a id="' . $pour . '_encours" class="fs-4" href="javascript:void(0);" onclick="window.open(' . $PopUp . ');" title="' . translate("Cliquez ici pour entrer") . ' ' . $pour . '" data-bs-toggle="tooltip" data-bs-placement="right">
                             <i class="fa fa-comments fa-2x nav-link faa-pulse animated faa-slow"></i>
                         </a>
                         <span class="badge rounded-pill bg-primary ms-auto align-self-center" title="' . translate("personne connectée.") . '" data-bs-toggle="tooltip">
                             ' . $numofchatters . '
                         </span>
-                    </div>' 
-                : '<div>
+                    </div>'
+            : '<div>
                         <a id="' . $pour . '" href="javascript:void(0);" onclick="window.open(' . $PopUp . ');" title="' . translate("Cliquez ici pour entrer") . '" data-bs-toggle="tooltip" data-bs-placement="right">
                             <i class="fa fa-comments fa-2x "></i>
                         </a>
                     </div>';
-        } else {
-            if (count($auto) > 1) {
+    } else {
+        if (count($auto) > 1) {
 
-                $numofchatters = 0;
-                $thing .= '<ul>';
+            $numofchatters = 0;
+            $thing .= '<ul>';
 
-                foreach ($auto as $autovalue) {
-                    $result = Cache::Q_select("SELECT groupe_id, groupe_name 
+            foreach ($auto as $autovalue) {
+                $result = Cache::Q_select("SELECT groupe_id, groupe_name 
                                         FROM " . sql_prefix('groupes') . " 
                                         WHERE groupe_id='$autovalue'", 3600);
 
-                    $autovalueX = $result[0];
+                $autovalueX = $result[0];
 
-                    $PopUp = JavaPopUp(site_url('chat.php?id=' . $autovalueX['groupe_id'] . '&auto=' . Crypt::encrypt(serialize($autovalueX['groupe_id']))), 'chat' . $autovalueX['groupe_id'], 380, 480);
-                    
-                    $thing .= "<li><a href=\"javascript:void(0);\" onclick=\"window.open($PopUp);\">" . $autovalueX['groupe_name'] . "</a>";
+                $PopUp = JavaPopUp(site_url('chat.php?id=' . $autovalueX['groupe_id'] . '&auto=' . Crypt::encrypt(serialize($autovalueX['groupe_id']))), 'chat' . $autovalueX['groupe_id'], 380, 480);
 
-                    $result = sql_query("SELECT DISTINCT ip 
+                $thing .= "<li><a href=\"javascript:void(0);\" onclick=\"window.open($PopUp);\">" . $autovalueX['groupe_name'] . "</a>";
+
+                $result = sql_query("SELECT DISTINCT ip 
                                         FROM " . sql_prefix('chatbox') . " 
                                         WHERE id='" . $autovalueX['groupe_id'] . "' 
                                         AND date >= " . (time() - (60 * 3)) . "");
-                    
-                    $numofchatters = sql_num_rows($result);
 
-                    if ($numofchatters) {
-                        $thing .= '&nbsp;(<span class="text-danger"><b>' . sql_num_rows($result) . '</b></span>)';
-                    }
+                $numofchatters = sql_num_rows($result);
 
-                    echo '</li>';
+                if ($numofchatters) {
+                    $thing .= '&nbsp;(<span class="text-danger"><b>' . sql_num_rows($result) . '</b></span>)';
                 }
 
-                $thing .= '</ul>';
+                echo '</li>';
             }
+
+            $thing .= '</ul>';
         }
-
-        global $block_title;
-
-        if ($block_title == '') {
-            $block_title = translate("Bloc Chat");
-        }
-
-        Theme::themesidebox($block_title, $thing);
-        
-        sql_free_result($result);
     }
+
+    global $block_title;
+
+    if ($block_title == '') {
+        $block_title = translate("Bloc Chat");
+    }
+
+    Theme::themesidebox($block_title, $thing);
+
+    sql_free_result($result);
+}
 
 
 #autodoc:<Powerpack_f.php>
@@ -233,7 +233,7 @@ function instant_members_message()
                     }
 
                     $messR = 'rank' . $rank;
-                    
+
                     $tmpR = "<img src=\"" . $imgtmpA . "\" border=\"0\" alt=\"" . Language::aff_langue($$messR) . "\" title=\"" . Language::aff_langue($$messR) . "\" loading=\"lazy\" />";
                 } else {
                     $tmpR = '&nbsp;';
@@ -335,7 +335,7 @@ function pollMain($pollID, $pollClose)
     }
 
     $boxContent = '
-        <form action="' . site_url('pollBooth.php')  .'" method="post">
+        <form action="' . site_url('pollBooth.php')  . '" method="post">
             <input type="hidden" name="pollID" value="' . $pollID . '" />
             <input type="hidden" name="forwarder" value="' . site_url($url) . '" />';
 
@@ -460,7 +460,7 @@ function Site_Activ()
             $imgtmp = $ibid;
         } else {
             $imgtmp = false;
-        } 
+        }
 
         $aff .= '<a href="stats.php">
                 <img src="' . $imgtmp . '" alt="' . translate("Statistiques") . '" />
@@ -490,7 +490,7 @@ function online()
     global $user, $cookie;
 
     $ip = Request::getip();
-    
+
     $username = isset($cookie[1]) ? $cookie[1] : '';
 
     if ($username == '') {
@@ -535,7 +535,7 @@ function online()
     //$who_online_num = $guest_online_num + $member_online_num;
     $who_online = '<p class="text-center">
         ' . translate("Il y a actuellement") . ' 
-        <span class="badge bg-secondary">' . $guest_online_num . '</span> ' . translate("visiteur(s) et") . 
+        <span class="badge bg-secondary">' . $guest_online_num . '</span> ' . translate("visiteur(s) et") .
         ' <span class="badge bg-secondary">' . $member_online_num . ' </span> ' . translate("membre(s) en ligne.") . '
         <br />';
 
@@ -543,7 +543,7 @@ function online()
 
     if ($user) {
         $content .= '<br />' . translate("Vous êtes connecté en tant que") . ' <strong>' . $username . '</strong>.<br />';
-        
+
         $result = Cache::Q_select("SELECT uid 
                             FROM " . sql_prefix('users') . " 
                             WHERE uname='$username'", 86400);
@@ -557,7 +557,7 @@ function online()
 
         $numrow = sql_num_rows($result2);
 
-        $content .= translate("Vous avez") . ' <a href="'. site_url('viewpmsg.php') . '">
+        $content .= translate("Vous avez") . ' <a href="' . site_url('viewpmsg.php') . '">
             <span class="badge bg-primary">' . $numrow . '</span>
             </a> ' . translate("message(s) personnel(s).") . '</p>';
     } else {
@@ -634,7 +634,7 @@ function mainblock()
 
     //must work from php 4 to 7 !..?..
     Theme::themesidebox(
-        Language::aff_langue($title), 
+        Language::aff_langue($title),
         Language::aff_langue(preg_replace_callback('#<a href=[^>]*(&)[^>]*>#', [Sanitize::class, 'changetoamp'], $content))
     );
 }
@@ -1257,8 +1257,8 @@ function headlines($hid = '', $block = true)
 
         if (file_exists($cache_file)) {
             ob_start();
-                $ibid = readfile($cache_file);
-                $boxstuff = $rss_font . ob_get_contents() . '</span>';
+            $ibid = readfile($cache_file);
+            $boxstuff = $rss_font . ob_get_contents() . '</span>';
             ob_end_clean();
         }
 

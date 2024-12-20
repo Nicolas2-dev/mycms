@@ -7,6 +7,9 @@ namespace Npds\Support;
 use Npds\Support\Facades\Log;
 
 
+/**
+ * Class Access
+ */
 class Access
 {
 

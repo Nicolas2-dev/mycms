@@ -8,7 +8,7 @@ use Npds\Config\Config;
 
 
 /**
- * [Versioning description]
+ * Class Npds Versioning
  */
 class Versioning
 {
@@ -16,7 +16,7 @@ class Versioning
     /**
      * [NPDS_URL description]
      *
-     * @var [type]
+     * @var string
      */
     const NPDS_URL = 'https://www.npds.org';
 

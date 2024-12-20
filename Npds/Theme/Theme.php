@@ -12,6 +12,7 @@ use Npds\Support\Referer;
 use Npds\Support\Sanitize;
 use Npds\Language\Language;
 use Npds\Metalang\Metalang;
+
 use Npds\Support\Facades\Css;
 use Npds\Support\Facades\Date;
 use Npds\Support\Facades\User;
@@ -19,7 +20,7 @@ use Npds\Support\Facades\Editeur;
 
 
 /**
- * Undocumented class
+ * Class Theme
  */
 class Theme 
 {
@@ -34,28 +35,28 @@ class Theme
     /**
      * [$theme description]
      *
-     * @var [type]
+     * @var string
      */
     protected string $theme;
 
     /**
      * [$skin description]
      *
-     * @var [type]
+     * @var string
      */
     protected string $skin;
 
     /**
      * [$header description]
      *
-     * @var [type]
+     * @var int
      */
     protected int $header = 1;
 
     /**
      * [$footer description]
      *
-     * @var [type]
+     * @var int
      */
     protected int $footer = 1;
 
@@ -75,7 +76,7 @@ class Theme
     /**
      * Get instance class Theme.
      *
-     * @return \Npds\Theme $instance
+     * @return \Npds\Theme\Theme $instance
      */
     public static function getInstance()
     {
