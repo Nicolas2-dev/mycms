@@ -12,7 +12,7 @@ use Npds\Support\Facades\Theme;
 
 
 /**
- * Undocumented class
+ * Class User
  */
 class User 
 {
@@ -20,9 +20,10 @@ class User
     /**
      * Instance User.
      *
-     * @var \Npds\User $instance
+     * @var \Npds\User\User $instance
      */
     protected static User $instance;
+
 
     /**
      * Constructeur.
@@ -35,7 +36,7 @@ class User
     /**
      * Get instance class User.
      *
-     * @return \Npds\User $instance
+     * @return \Npds\User\User $instance
      */
     public static function getInstance()
     {
@@ -46,8 +47,14 @@ class User
         return static::$instance = new static();
     }
 
-    #autodoc getusrinfo($user) : Renvoi le contenu de la table users pour le user uname
-    function getusrinfo($user)
+    /**
+     * Renvoi le contenu de la table users pour le user uname.
+     *
+     * @param   string  $user  [$user description]
+     *
+     * @return  string
+     */
+    public function getusrinfo(string $user)
     {
         $cookie = explode(':', base64_decode($user));
         
@@ -74,8 +81,12 @@ class User
         return $userinfo;
     }
 
-    #autodoc AutoReg() : Si AutoRegUser=true et que le user ne dispose pas du droit de connexion : RAZ du cookie NPDS<br />retourne False ou True
-    function AutoReg()
+    /**
+     * Si AutoRegUser=true et que le user ne dispose pas du droit de connexion : RAZ du cookie NPDS
+     *
+     * @return  bool true or false
+     */
+    public function AutoReg()
     {
         global $user;
 
@@ -102,7 +113,16 @@ class User
         }
     }
 
-    function user_is_moderator($uidX, $passwordX, $forum_accessX)
+    /**
+     * [user_is_moderator description]
+     *
+     * @param   int     $uidX           [$uidX description]
+     * @param   string  $passwordX      [$passwordX description]
+     * @param   int     $forum_accessX  [$forum_accessX description]
+     *
+     * @return  string|bool
+     */
+    function user_is_moderator(int $uidX, string $passwordX, int $forum_accessX)
     {
         $result1 = sql_query("SELECT pass 
                             FROM " . sql_prefix('users') . " 
@@ -125,7 +145,14 @@ class User
         }
     }
 
-    function get_userdata_from_id($userid)
+    /**
+     * [get_userdata_from_id description]
+     *
+     * @param   int  $userid  [$userid description]
+     *
+     * @return  array
+     */
+    public function get_userdata_from_id(int $userid)
     {
         $sql1 = "SELECT * 
                 FROM " . sql_prefix('users') . " 
@@ -148,7 +175,14 @@ class User
         return $myrow;
     }
 
-    function get_userdata_extend_from_id($userid)
+    /**
+     * [get_userdata_extend_from_id description]
+     *
+     * @param   int  $userid  [$userid description]
+     *
+     * @return  array
+     */
+    public function get_userdata_extend_from_id(int $userid)
     {
         $sql1 = "SELECT * 
                 FROM " . sql_prefix('users_extend') . " 
@@ -159,7 +193,14 @@ class User
         return $myrow;
     }
 
-    function get_userdata($username)
+    /**
+     * [get_userdata description]
+     *
+     * @param   string  $username  [$username description]
+     *
+     * @return  array
+     */
+    public function get_userdata(string $username)
     {
         $sql = "SELECT * 
                 FROM " . sql_prefix('users') . " 
@@ -176,8 +217,20 @@ class User
         return $myrow;
     }
 
-    #autodoc userpopover($who, $dim, $avpop) : à partir du nom de l'utilisateur ($who) $avpop à 1 : affiche son avatar (ou avatar defaut) au dimension ($dim qui défini la class n-ava-$dim)<br /> $avpop à 2 : l'avatar affiché commande un popover contenant diverses info de cet utilisateur et liens associés
-    function userpopover($who, $dim, $avpop)
+    /**
+     * à partir du nom de l'utilisateur ($who) 
+     * 
+     * $avpop à 1 : affiche son avatar (ou avatar defaut) au dimension ($dim qui défini la class n-ava-$dim)
+     * $avpop à 2 : l'avatar affiché commande un popover contenant diverses info de cet utilisateur et liens associés
+     * 
+     *
+     * @param   string  $who    [$who description]
+     * @param   int     $dim    [$dim description]
+     * @param   int     $avpop  [$avpop description]
+     *
+     * @return  [type]          [return description]
+     */
+    function userpopover(string $who, int $dim, int $avpop)
     {
         global $short_user, $user;
 
@@ -198,8 +251,8 @@ class User
                 if ($temp_user['uid'] != 1) {
                     $posterdata_extend = $this->get_userdata_extend_from_id($temp_user['uid']);
 
-                    include('Modules/reseaux-sociaux/reseaux-sociaux.conf.php');
-                    include('Modules/geoloc/geoloc.conf');
+                    include(module_path('reseaux-sociaux/reseaux-sociaux.conf.php'));
+                    include(module_path('geoloc/geoloc.conf'));
 
                     if ($user or Auth::autorisation(-127)) {
                         if ($posterdata_extend['M2'] != '') {
@@ -243,58 +296,92 @@ class User
 
             if ($user or Auth::autorisation(-127)) {
                 if ($temp_user['uid'] != 1 and $temp_user['uid'] != '') {
-                    $useroutils .= '<li><a class="dropdown-item text-center text-md-start" href="user.php?op=userinfo&amp;uname=' . $temp_user['uname'] . '" target="_blank" title="' . translate("Profil") . '" ><i class="fa fa-lg fa-user align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Profil") . '</span></a></li>';
+                    $useroutils .= '<li>
+                        <a class="dropdown-item text-center text-md-start" href="' . site_url('user.php?op=userinfo&amp;uname=' . $temp_user['uname']) . '" target="_blank" title="' . translate("Profil") . '" ><i class="fa fa-lg fa-user align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Profil") . '</span></a></li>';
                 }
 
                 if ($temp_user['uid'] != 1 and $temp_user['uid'] != '') { 
-                    $useroutils .= '<li><a class="dropdown-item text-center text-md-start" href="powerpack.php?op=instant_message&amp;to_userid=' . urlencode($temp_user['uname']) . '" title="' . translate("Envoyer un message interne") . '" ><i class="far fa-lg fa-envelope align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Message") . '</span></a></li>';
+                    $useroutils .= '<li>
+                        <a class="dropdown-item text-center text-md-start" href="' . site_url('powerpack.php?op=instant_message&amp;to_userid=' . urlencode($temp_user['uname'])) . '" title="' . translate("Envoyer un message interne") . '" >
+                            <i class="far fa-lg fa-envelope align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Message") . '</span>
+                        </a>
+                    </li>';
                 }
 
                 if ($temp_user['femail'] != ''){
-                    $useroutils .= '<li><a class="dropdown-item  text-center text-md-start" href="mailto:' . Spam::anti_spam($temp_user['femail'], 1) . '" target="_blank" title="' . translate("Email") . '" ><i class="fa fa-at fa-lg align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Email") . '</span></a></li>';
+                    $useroutils .= '<li>
+                        <a class="dropdown-item  text-center text-md-start" href="mailto:' . Spam::anti_spam($temp_user['femail'], 1) . '" target="_blank" title="' . translate("Email") . '" >
+                            <i class="fa fa-at fa-lg align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Email") . '</span>
+                        </a>
+                    </li>';
                 }
 
                 if ($temp_user['uid'] != 1 and array_key_exists($ch_lat, $posterdata_extend)) {
                     if ($posterdata_extend[$ch_lat] != '') {
-                        $useroutils .= '<li><a class="dropdown-item text-center text-md-start" href="modules.php?ModPath=geoloc&amp;ModStart=geoloc&op=u' . $temp_user['uid'] . '" title="' . translate("Localisation") . '" ><i class="fas fa-map-marker-alt fa-lg align-middle fa-fw">&nbsp;</i><span class="ms-2 d-none d-md-inline">' . translate("Localisation") . '</span></a></li>';
+                        $useroutils .= '<li>
+                            <a class="dropdown-item text-center text-md-start" href="' . site_url('modules.php?ModPath=geoloc&amp;ModStart=geoloc&op=u' . $temp_user['uid']) . '" title="' . translate("Localisation") . '" >
+                                <i class="fas fa-map-marker-alt fa-lg align-middle fa-fw">&nbsp;</i><span class="ms-2 d-none d-md-inline">' . translate("Localisation") . '</span>
+                            </a>
+                        </li>';
                     }
                 }
             }
 
             if ($temp_user['url'] != '') {
-                $useroutils .= '<li><a class="dropdown-item text-center text-md-start" href="' . $temp_user['url'] . '" target="_blank" title="' . translate("Visiter ce site web") . '"><i class="fas fa-external-link-alt fa-lg align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Visiter ce site web") . '</span></a></li>';
+                $useroutils .= '<li>
+                    <a class="dropdown-item text-center text-md-start" href="' . $temp_user['url'] . '" target="_blank" title="' . translate("Visiter ce site web") . '">
+                        <i class="fas fa-external-link-alt fa-lg align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Visiter ce site web") . '</span>
+                    </a>
+                </li>';
             }
 
             if ($temp_user['mns']) {
-                $useroutils .= '<li><a class="dropdown-item text-center text-md-start" href="minisite.php?op=' . $temp_user['uname'] . '" target="_blank" title="' . translate("Visitez le minisite") . '" ><i class="fa fa-lg fa-desktop align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Visitez le minisite") . '</span></a></li>';
+                $useroutils .= '<li>
+                    <a class="dropdown-item text-center text-md-start" href="' . site_url('minisite.php?op=' . $temp_user['uname']) . '" target="_blank" title="' . translate("Visitez le minisite") . '" >
+                        <i class="fa fa-lg fa-desktop align-middle fa-fw"></i><span class="ms-2 d-none d-md-inline">' . translate("Visitez le minisite") . '</span>
+                    </a>
+                </li>';
             }
 
             if (stristr($temp_user['user_avatar'], 'users_private')) {
                 $imgtmp = $temp_user['user_avatar'];
             } else {
                 if ($ibid = Theme::image('forum/avatar/' . $temp_user['user_avatar'])) {
-                    $imgtmp = $ibid;
+                    $imgtmp = site_url($ibid);
                 } else {
-                    $imgtmp = 'public/assets/images/forum/avatar/' . $temp_user['user_avatar'];
+                    $imgtmp = asset_url('images/forum/avatar/' . $temp_user['user_avatar']);
                 }
             }
 
-            $userpop = $avpop == 1 ?
-                '<img class="btn-outline-primary img-thumbnail img-fluid n-ava-' . $dim . ' me-2" src="' . $imgtmp . '" alt="' . $temp_user['uname'] . '" loading="lazy" />' :
-                '
+            $userpop = $avpop == 1 
+                ? '<img class="btn-outline-primary img-thumbnail img-fluid n-ava-' . $dim . ' me-2" src="' . $imgtmp . '" alt="' . $temp_user['uname'] . '" loading="lazy" />' 
+                
+                : '
                 <div class="dropdown d-inline-block me-4 dropend">
-                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    <img class=" btn-outline-primary img-fluid n-ava-' . $dim . ' me-0" src="' . $imgtmp . '" alt="' . $temp_user['uname'] . '" loading="lazy" />
-                </a>
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <img class=" btn-outline-primary img-fluid n-ava-' . $dim . ' me-0" src="' . $imgtmp . '" alt="' . $temp_user['uname'] . '" loading="lazy" />
+                    </a>
                 <ul class="dropdown-menu bg-light">
-                    <li><span class="dropdown-item-text text-center py-0 my-0">' . $this->userpopover($who, 64, 1) . '</span></li>
-                    <li><h6 class="dropdown-header text-center py-0 my-0">' . $who . '</h6></li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <span class="dropdown-item-text text-center py-0 my-0">' . $this->userpopover($who, 64, 1) . '</span>
+                    </li>
+                    <li>
+                        <h6 class="dropdown-header text-center py-0 my-0">' . $who . '</h6>
+                        </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
                     ' . $useroutils . '
-                    <li><hr class="dropdown-divider"></li>
-                    <li><div class="mx-auto text-center" style="max-width:170px;">' . $my_rs . '</div>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <div class="mx-auto text-center" style="max-width:170px;">
+                            ' . $my_rs . '
+                        </div>
+                    </li>
                 </ul>
-                </div>';
+            </div>';
 
             return $userpop;
         }
