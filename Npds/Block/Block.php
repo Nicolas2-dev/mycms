@@ -260,14 +260,14 @@ class Block
     /**
      * Assure la fabrication réelle et le Cache d'un bloc.
      *
-     * @param   string  $title    [$title description]
-     * @param   int     $member   [$member description]
-     * @param   string  $content  [$content description]
-     * @param   int     $Xcache   [$Xcache description]
+     * @param   string      $title    [$title description]
+     * @param   int|string  $member   [$member description]
+     * @param   string      $content  [$content description]
+     * @param   int|string  $Xcache   [$Xcache description]
      *
      * @return  [type]            [return description]
      */
-    private function fab_block(string $title, int $member, string $content, int $Xcache)
+    private function fab_block(string $title, int|string $member, string $content, int|string $Xcache)
     {
         global $SuperCache, $CACHE_TIMINGS;
 
@@ -475,13 +475,13 @@ class Block
     /**
      * Render sidebox.
      *
-     * @param   string  $title    Titre du block.
-     * @param   string  $content  Contenue du block.
-     * @param   int     $member   Droit du block.
+     * @param   string      $title    Titre du block.
+     * @param   string      $content  Contenue du block.
+     * @param   int|string  $member   Droit du block.
      *
      * @return  void
      */
-    private function renderSidebox(string $title, string $content, int $member)
+    private function renderSidebox(string $title, string $content, int|string $member)
     {
         global $user, $admin;
 

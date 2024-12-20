@@ -80,11 +80,11 @@ class Pollbooth
     /**
      * Assure la gestion des sondages membres
      *
-     * @param   int  $pollID  [$pollID description]
+     * @param   int|string  $pollID  [$pollID description]
      *
      * @return  array
      */
-    private function pollSecur(int $pollID)
+    private function pollSecur(int|string $pollID)
     {
         global $user;
 

@@ -93,9 +93,9 @@ class Crypt
      */
     public function encryptK(string $txt, string $C_key)
     {
-        srand((float) microtime() * 1000000);
+        srand((int) microtime() * 1000000);
 
-        $encrypt_key = md5(rand(0, 32000));
+        $encrypt_key = md5("rand(0, 32000)");
 
         $ctr = 0;
         $tmp = '';

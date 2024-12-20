@@ -89,7 +89,7 @@ class Theme
     /**
      * [themeInit description]
      *
-     * @return  [type]  [return description]
+     * @return  void
      */
     public function themeInit()
     {
@@ -125,7 +125,7 @@ class Theme
     /**
      * [skinInit description]
      *
-     * @return  [type]  [return description]
+     * @return  void
      */
     public function skinInit()
     {
@@ -182,7 +182,7 @@ class Theme
     /**
      * [getTheme description]
      *
-     * @return  [type]  [return description]
+     * @return  string
      */
     public function getTheme()
     {
@@ -192,7 +192,7 @@ class Theme
     /**
      * [defaultTheme description]
      *
-     * @return  [type]  [return description]
+     * @return  string
      */
     public function defaultTheme()
     {
@@ -202,7 +202,7 @@ class Theme
     /**
      * [getSkin description]
      *
-     * @return  [type]  [return description]
+     * @return  string
      */
     public function getSkin()
     {
@@ -212,7 +212,7 @@ class Theme
     /**
      * [defaultSkin description]
      *
-     * @return  [type]  [return description]
+     * @return  string
      */
     public function defaultSkin()
     {
@@ -222,7 +222,7 @@ class Theme
     /**
      * [getHeader description]
      *
-     * @return  [type]  [return description]
+     * @return  int
      */
     public function getHeader()
     {
@@ -234,7 +234,7 @@ class Theme
      *
      * @param   int  $header  [$header description]
      *
-     * @return  [type]        [return description]
+     * @return  void
      */
     public function setHeader(int $header)
     {
@@ -244,7 +244,7 @@ class Theme
     /**
      * [getFooter description]
      *
-     * @return  [type]  [return description]
+     * @return  int
      */
     public function getFooter()
     {
@@ -256,7 +256,7 @@ class Theme
      *
      * @param   int  $footer  [$footer description]
      *
-     * @return  [type]        [return description]
+     * @return  void
      */
     public function setfooter(int $footer)
     {
@@ -639,9 +639,9 @@ class Theme
                     //echo '<td>' . $S_exist. '</td>'; 
 
                     echo '
-                        <td><b>' . Sanitize::wrh(sql_num_rows(sql_query("SELECT uid 
-                                        FROM " . sql_prefix('users') . " 
-                                        WHERE theme='$themelist'")) ?: 0) . '
+                        <td>
+                            <b>
+                            ' . Sanitize::wrh(sql_num_rows(sql_query("SELECT uid FROM " . sql_prefix('users') . " WHERE theme='$themelist'")) ?: 0) . '
                             </b>
                         </td>
                         <td>' . $T_exist . '</td>

@@ -146,13 +146,13 @@ class Sanitize
     /**
      * Formate une chaine numérique avec un espace tous les 3 chiffres / cheekybilly 2005
      *
-     * @param   string  $ibid  [$ibid description]
+     * @param   string|int|bool  $ibid  [$ibid description]
      *
      * @return  string
      */
-    public static function wrh(string $ibid)
+    public static function wrh(string|int|bool $ibid)
     {
-        $tmp = number_format($ibid, 0, ',', ' ');
+        $tmp = number_format( (int) $ibid, 0, ',', ' ');
         $tmp = str_replace(' ', '&nbsp;', $tmp);
 
         return $tmp;

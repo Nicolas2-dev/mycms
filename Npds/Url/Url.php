@@ -6,7 +6,7 @@ namespace Npds\Url;
 
 
 /**
- * Undocumented class
+ * Class Url.
  */
 class Url 
 {
@@ -17,6 +17,7 @@ class Url
      * @var \Npds\Url\Url $instance
      */
     protected static Url $instance;
+
 
     /**
      * Constructeur.
