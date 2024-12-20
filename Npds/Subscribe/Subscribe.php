@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Npds\Subscribe;
 
 use Npds\Config\Config;
+use Npds\Mailer\Mailer;
 
 
 /**
- * Undocumented class
+ * Class Subscribe
  */
 class Subscribe 
 {
@@ -16,22 +17,30 @@ class Subscribe
     /**
      * Instance Subscribe.
      *
-     * @var \Npds\Subscribe $instance
+     * @var \Npds\Subscribe\Subscribe $instance
      */
     protected static Subscribe $instance;
+
+    /**
+     * Instance Mailer.
+     *
+     * @var Npds\Mailer\Mailer $instance
+     */
+    protected Mailer $mailer;
+
 
     /**
      * Constructeur.
      */
     public function __construct()
     {
-        //
+        $this->mailer = Mailer::getInstance();
     }
 
     /**
      * Get instance class Subscribe.
      *
-     * @return \Npds\Subscribe $instance
+     * @return \Npds\Subscribe\Susbcribe $instance
      */
     public static function getInstance()
     {
@@ -42,15 +51,19 @@ class Subscribe
         return static::$instance = new static();
     }
 
-    #autodoc subscribe_mail($Xtype, $Xtopic,$Xforum, $Xresume, $Xsauf) : Assure l'envoi d'un mail pour un abonnement
-    function subscribe_mail($Xtype, $Xtopic, $Xforum, $Xresume, $Xsauf)
+    /**
+     * Assure l'envoi d'un mail pour un abonnement
+     *
+     * @param   int     $Xtype    topic, forum ... 
+     * @param   string  $Xtopic   clause WHERE
+     * @param   int     $Xforum   id of forum
+     * @param   string  $Xresume  Text passed
+     * @param   int     $Xsauf    not this userid
+     *
+     * @return  void
+     */
+    public function subscribe_mail(int $Xtype, string $Xtopic, int $Xforum, string $Xresume, int $Xsauf)
     {
-        // $Xtype : topic, forum ... 
-        // $Xtopic clause WHERE 
-        // $Xforum id of forum 
-        // $Xresume Text passed 
-        // $Xsauf not this userid
-        
         if ($Xtype == 'topic') {
             $result = sql_query("SELECT topictext 
                                 FROM " . sql_prefix('topics') . " 
@@ -87,7 +100,7 @@ class Subscribe
                                 WHERE forumid='$Xforum'");
         }
 
-        include_once("Language/lang-multi.php");
+        include_once(language_path('lang-multi.php'));
 
         while (list($uid) = sql_fetch_row($result)) {
             if ($uid != $Xsauf) {
@@ -98,20 +111,23 @@ class Subscribe
                 list($email, $user_langue) = sql_fetch_row($resultX);
                 
                 $sitename = Config::get('npds.sitename');
-                $nuke_url = Config::get('npds.nuke_url');
 
                 if ($Xtype == 'topic') {
                     $entete = translate_ml($user_langue, "Vous recevez ce Mail car vous vous êtes abonné à : ") . translate_ml($user_langue, "Sujet") . " => " . strip_tags($abo) . "\n\n";
                     
                     $resume = translate_ml($user_langue, "Le titre de la dernière publication est") . " => $Xresume\n\n";
                     
-                    $url = translate_ml($user_langue, "L'URL pour cet article est : ") . "<a href=\"$nuke_url/search.php?query=&topic=$Xtopic\">$nuke_url/search.php?query=&topic=$Xtopic</a>\n\n";
+                    $url_topic = site_url('search.php?query=&topic=' . $Xtopic);
+
+                    $url = translate_ml($user_langue, "L'URL pour cet article est : ") . "<a href=\"" . $url_topic . "\">" . $url_topic . "</a>\n\n";
                 }
 
                 if ($Xtype == 'forum') {
                     $entete = translate_ml($user_langue, "Vous recevez ce Mail car vous vous êtes abonné à : ") . translate_ml($user_langue, "Forum") . " => " . strip_tags($abo) . "\n\n";
                     
-                    $url = translate_ml($user_langue, "L'URL pour cet article est : ") . "<a href=\"$nuke_url/$hrefX?topic=$Xtopic&forum=$Xforum&start=9999#lastpost\">$nuke_url/$hrefX?topic=$Xtopic&forum=$Xforum&start=9999</a>\n\n";
+                    $url_forum = site_url($hrefX . '?topic=' . $Xtopic . '&forum=' . $Xforum . '&start=9999#lastpost');
+
+                    $url = translate_ml($user_langue, "L'URL pour cet article est : ") . "<a href=\"" . $url_forum . "\">" . $url_forum . "</a>\n\n";
                     
                     $resume = translate_ml($user_langue, "Le titre de la dernière publication est") . " => ";
                     
@@ -123,19 +139,28 @@ class Subscribe
                 }
 
                 $subject = html_entity_decode(translate_ml($user_langue, "Abonnement"), ENT_COMPAT | ENT_HTML401, 'UTF-8') . " / $sitename";
+                
                 $message = $entete;
                 $message .= $resume;
                 $message .= $url;
 
-                include("signat.php");
+                include(config_path('signat.php'));
 
-                send_email($email, $subject, $message, '', true, 'html');
+                $this->mailer->send_email($email, $subject, $message, '', true, 'html');
             }
         }
     }
 
-    #autodoc subscribe_query($Xuser,$Xtype, $Xclef) : Retourne true si le membre est abonné; à un topic ou forum
-    function subscribe_query($Xuser, $Xtype, $Xclef)
+    /**
+     * Retourne true si le membre est abonné; à un topic ou forum
+     *
+     * @param   int     $Xuser  [$Xuser description]
+     * @param   string  $Xtype  [$Xtype description]
+     * @param   int     $Xclef  [$Xclef description]
+     *
+     * @return  bool
+     */
+    public function subscribe_query(int $Xuser, string $Xtype, int $Xclef)
     {
         if ($Xtype == 'topic') {
             $result = sql_query("SELECT topicid 

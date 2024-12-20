@@ -149,6 +149,22 @@ if (! function_exists('theme_path')) {
 /**
  * 
  */
+if (! function_exists('language_path')) {
+    /**
+     * Retourne le chemin des languages de l'application.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function language_path(string $path)
+    {
+        return base_path('Language/' . $path);
+    }
+}
+
+/**
+ * 
+ */
 if (! function_exists('storage_path')) {
     /**
      * Retourne le chemin du storage de l'application.
