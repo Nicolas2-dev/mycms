@@ -1,7 +1,8 @@
 <?php
 
-namespace Npds\User;
+declare(strict_types=1);
 
+namespace Npds\User;
 
 use Npds\Config\Config;
 use Npds\Support\Error;
