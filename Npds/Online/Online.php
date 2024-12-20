@@ -16,6 +16,7 @@ class Online
      */
     protected static Online $instance;
 
+
     /**
      * Constructeur.
      */
@@ -38,16 +39,26 @@ class Online
         return static::$instance = new static();
     }
 
-    #autodoc Who_Online() : Qui est en ligne ? + message de bienvenue
-    function Who_Online()
+    /**
+     * Qui est en ligne ? + message de bienvenue
+     *
+     * @return  array
+     */
+    public function Who_Online()
     {
         list($content1, $content2) = $this->Who_Online_Sub();
         
         return array($content1, $content2);
     }
-
-    #autodoc Who_Online() : Qui est en ligne ? + message de bienvenue / SOUS-Fonction / Utilise Site_Load
-    function Who_Online_Sub()
+ 
+    /**
+     * Qui est en ligne ? + message de bienvenue
+     * 
+     * SOUS-Fonction : Utilise la function => Site_Load
+     * 
+     * @return  array
+     */
+    public function Who_Online_Sub()
     {
         global $user, $cookie;
 
@@ -64,8 +75,15 @@ class Online
         return array($content1, $content2);
     }
 
-    #autodoc Site_Load() : Maintient les informations de NB connexion (membre, anonyme) - globalise la variable $who_online_num et maintient le fichier cache/site_load.log &agrave; jour<br />Indispensable pour la gestion de la 'clean_limit' de SuperCache
-    function Site_Load()
+    /**
+     * Maintient les informations de NB connexion (membre, anonyme)
+     * 
+     * globalise la variable $who_online_num et maintient le fichier cache/site_load.log à jour.
+     * Indispensable pour la gestion de la 'clean_limit' de SuperCache.
+     * 
+     * @return  array
+     */
+    public function Site_Load()
     {
         global $SuperCache, $who_online_num;
         
@@ -77,7 +95,7 @@ class Online
                             GROUP BY guest");
 
         while ($TheResult = sql_fetch_assoc($result)) {
-            if ($TheResult['guest'] == 0){
+            if ($TheResult['guest'] == 0) {
                 $member_online_num = $TheResult['TheCount'];
             } else {
                 $guest_online_num = $TheResult['TheCount'];
@@ -87,7 +105,7 @@ class Online
         $who_online_num = $guest_online_num + $member_online_num;
         
         if ($SuperCache) {
-            $file = fopen("storage/cache/site_load.log", "w");
+            $file = fopen(storage_path('cache/site_load.log'), 'w');
             fwrite($file, $who_online_num);
             fclose($file);
         }
@@ -95,8 +113,16 @@ class Online
         return array($member_online_num, $guest_online_num);
     }
 
-    #autodoc online_members () : liste des membres connect&eacute;s <br /> Retourne un tableau dont la position 0 est le nombre, puis la liste des username | time <br />Appel : $xx=online_members(); puis $xx[x]['username'] $xx[x]['time'] ...
-    function online_members()
+    /**
+     * liste des membres connectés.
+     * 
+     * Retourne un tableau dont la position 0 est le nombre, puis la liste des username.
+     * | time Appel : $xx=online_members(); puis $xx[x]['username'] $xx[x]['time'] ...
+     * 
+     *
+     * @return  array
+     */
+    public function online_members()
     {
         $result = sql_query("SELECT username, guest, time 
                             FROM " . sql_prefix('session') . " 
