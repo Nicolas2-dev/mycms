@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Support\Facades;
 
 use Npds\Online\Online as OnlineManager;
@@ -18,7 +20,7 @@ class Online
      * @param [type] $parameters
      * @return void
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, array $parameters)
     {
         $instance = OnlineManager::getInstance();
 

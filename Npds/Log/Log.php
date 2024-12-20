@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Log;
 
 use Npds\Http\Request;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Alertes;
 
 use Npds\Config\Config;

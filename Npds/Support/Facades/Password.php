@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Support\Facades;
 
 use Npds\Password\Password as PasswordManager;
@@ -18,7 +20,7 @@ class Password
      * @param [type] $parameters
      * @return void
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, array $parameters)
     {
         $instance = PasswordManager::getInstance();
 

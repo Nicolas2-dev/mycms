@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Support\Facades;
 
 use Npds\Auth\Auth as AuthManager;
@@ -18,7 +20,7 @@ class Auth
      * @param [type] $parameters
      * @return void
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, array $parameters)
     {
         $instance = AuthManager::getInstance();
 

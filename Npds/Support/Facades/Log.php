@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Support\Facades;
 
 use Npds\Log\Log as LogManager;
@@ -18,7 +20,7 @@ class Log
      * @param [type] $parameters
      * @return void
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, array $parameters)
     {
         $instance = LogManager::getInstance();
 

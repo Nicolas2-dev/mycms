@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\Mailer;
 
 use PHPMailer\PHPMailer\SMTP;

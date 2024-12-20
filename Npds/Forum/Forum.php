@@ -1,7 +1,8 @@
 <?php
 
-namespace Npds\Forum;
+declare(strict_types=1);
 
+namespace Npds\Forum;
 
 use IntlDateFormatter;
 use Npds\Config\Config;

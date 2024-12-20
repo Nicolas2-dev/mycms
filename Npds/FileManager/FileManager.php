@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Npds\FileManager;
 
 use Npds\Config\Config;

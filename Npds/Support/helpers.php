@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Npds\Log\Log;
 use Npds\Auth\Auth;
 use Npds\Code\Code;

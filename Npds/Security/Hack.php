@@ -1,7 +1,8 @@
 <?php
 
-namespace Npds\Security;
+declare(strict_types=1);
 
+namespace Npds\Security;
 
 use Npds\Editeur\Editeur;
 use Npds\Support\Facades\Request;
