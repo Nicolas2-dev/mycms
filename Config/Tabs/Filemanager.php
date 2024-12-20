@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * 
+ */
+return [
+
+    /**
+     * 
+     */
+    'filemanager' => true,
+
+];
+

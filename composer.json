@@ -1,0 +1,27 @@
+{
+    "name": "nicolas2-vev/npds-revolution",
+    "description": "cms",
+    "type": "no",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "App\\": "./",
+            "Npds\\": "Npds/"
+        },
+        "files": [
+            "Npds/Support/helpers.php",
+            "Npds/Support/metalang.php",
+            "Npds/Support/blocks.php"
+        ] 
+    },
+    "authors": [
+        {
+            "name": "nicolas2"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "symfony/var-dumper": "7.2.x-dev",
+        "phpmailer/phpmailer": "dev-master"
+    }
+}
