@@ -55,7 +55,11 @@ class BannerController extends Controller
 
                 // More efficient random stuff, thanks to Cristian Arroyo from http://www.planetalinux.com.ar
                 if ($numrows > 0) {
-                    mt_srand((float) microtime() * 1000000);
+
+                    $micro = ((int) (microtime() * 1000000));
+
+                    mt_srand($micro);
+
                     $bannum = mt_rand(0, $numrows);
                 } else {
                     break;
@@ -259,7 +263,9 @@ class BannerController extends Controller
 
                 while (list($bid, $imptotal, $impmade, $clicks, $date) = sql_fetch_row($result)) {
 
-                    $percent = $impmade == 0 ? '0' : substr(100 * $clicks / $impmade, 0, 5);
+                    $random = (100 * $clicks / $impmade);
+
+                    $percent = $impmade == 0 ? '0' : substr("$random", 0, 5);
                     $left = $imptotal == 0 ? translate("Illimité") : $imptotal - $impmade;
 
                     echo '
@@ -361,7 +367,10 @@ class BannerController extends Controller
                                     WHERE cid='$cid'");
 
                 while (list($bid, $impressions, $clicks, $datestart, $dateend) = sql_fetch_row($result)) {
-                    $percent = substr(100 * $clicks / $impressions, 0, 5);
+                    
+                    $random = (100 * $clicks / $impressions);
+
+                    $percent = substr("$random", 0, 5);
 
                     echo '
                     <tr>
@@ -436,7 +445,9 @@ class BannerController extends Controller
 
                 list($bid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date) = sql_fetch_row($result);
 
-                $percent = $impmade == 0 ? '0' : substr(100 * $clicks / $impmade, 0, 5);
+                $random = (100 * $clicks / $impmade);
+
+                $percent = $impmade == 0 ? '0' : substr("$random", 0, 5);
 
                 if ($imptotal == 0) {
                     $left = translate("Illimité");

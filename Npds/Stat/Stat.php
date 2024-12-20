@@ -117,7 +117,7 @@ class Stat
      */
     function generatePourcentageAndTotal($count, $total)
     {
-        $tab[] = Sanitize::wrh($count);
+        $tab[] = Sanitize::wrh((int) $count);
         $tab[] = substr(sprintf('%f', 100 * $count / $total), 0, 5);
     
         return $tab;

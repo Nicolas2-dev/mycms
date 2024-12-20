@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 use Npds\Config\Config;
 use Npds\Http\Controller;
-
 use Npds\Support\Sanitize;
 use Npds\Support\Versioning;
-
 use Npds\Support\Facades\Stat;
 use Npds\Support\Facades\Asset;
 use Npds\Support\Facades\Theme;
@@ -42,7 +40,7 @@ class StatistiqueController extends Controller
         while (list($type, $var, $count) = sql_fetch_row($dkn)) {
 
             if ($type == "total" && $var == "hits") {
-                $total = $count;
+                $total = (int) $count;
             } elseif ($type == "browser") {
                 if ($var == "Other") {
                     $b_other = Stat::generatePourcentageAndTotal($count, $total);
@@ -491,7 +489,7 @@ class StatistiqueController extends Controller
         if ($cat = ((sql_num_rows(sql_query("SELECT cid FROM " . sql_prefix('links_categories'))) ?: 0) + (sql_num_rows(sql_query("SELECT sid FROM " . sql_prefix('links_subcategories'))) ?: 0)) > 0) {
             echo '<li class="list-group-item d-flex justify-content-start align-items-center">
                 <i class="fa fa-link fa-2x text-body-secondary me-1"></i>
-                ' . translate("Catégories dans la rubrique des liens web") . ' <span class="badge bg-secondary ms-auto">' . Sanitize::wrh($cat) . ' </span>
+                ' . translate("Catégories dans la rubrique des liens web") . ' <span class="badge bg-secondary ms-auto">' . Sanitize::wrh((int) $cat) . ' </span>
                 </li>';
         }
 

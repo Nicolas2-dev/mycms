@@ -9,6 +9,7 @@ use Npds\Support\Facades\Css;
 use Npds\Support\Facades\Auth;
 use Npds\Support\Facades\Date;
 use Npds\Support\Facades\News;
+use Npds\Support\Facades\Stat;
 use Npds\Support\Facades\Block;
 use Npds\Support\Facades\Cache;
 use Npds\Support\Facades\Crypt;
@@ -431,16 +432,16 @@ function pollMain($pollID, $pollClose)
 #autodoc Site_Activ() : Bloc activité du site <br />=> syntaxe : function#Site_Activ
 function Site_Activ()
 {
-    list($membres, $totala, $totalb, $totalc, $totald, $totalz) = req_stat();
+    list($membres, $totala, $totalb, $totalc, $totald, $totalz) = Stat::req_stat();
 
     $aff = '
-        <p class="text-center">' . translate("Pages vues depuis") . ' ' . Config::get('npds.startdate') . ' : <span class="fw-semibold">' . Sanitize::wrh($totalz) . '</span></p>
+        <p class="text-center">' . translate("Pages vues depuis") . ' ' . Config::get('npds.startdate') . ' : <span class="fw-semibold">' . Sanitize::wrh((int) $totalz) . '</span></p>
         <ul class="list-group mb-3" id="site_active">
-           <li class="my-1">' . translate("Nb. de membres") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh(($membres)) . '</span></li>
-           <li class="my-1">' . translate("Nb. d'articles") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh($totala) . '</span></li>
-           <li class="my-1">' . translate("Nb. de forums") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh($totalc) . '</span></li>
-           <li class="my-1">' . translate("Nb. de sujets") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh($totald) . '</span></li>
-           <li class="my-1">' . translate("Nb. de critiques") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh($totalb) . '</span></li>
+           <li class="my-1">' . translate("Nb. de membres") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh((int) $membres) . '</span></li>
+           <li class="my-1">' . translate("Nb. d'articles") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh((int) $totala) . '</span></li>
+           <li class="my-1">' . translate("Nb. de forums") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh((int) $totalc) . '</span></li>
+           <li class="my-1">' . translate("Nb. de sujets") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh((int) $totald) . '</span></li>
+           <li class="my-1">' . translate("Nb. de critiques") . ' <span class="badge rounded-pill bg-secondary float-end">' . Sanitize::wrh((int) $totalb) . '</span></li>
         </ul>';
 
     if ($ibid = Theme::image("box/top.gif")) {
