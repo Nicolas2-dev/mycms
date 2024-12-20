@@ -28,9 +28,9 @@
 ######################################################################
 
 $dbhost = "db";
-$dbuname = "";
-$dbpass = "";
-$dbname = "";
+$dbuname = "nicodevdf";
+$dbpass = "kylopmfd";
+$dbname = "revolutiondf";
 $mysql_p = 1;
 $mysql_i = 1;
 # =======================
